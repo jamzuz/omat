@@ -2,18 +2,6 @@ import requests
 
 r = requests.get('https://api.palvelutietovaranto.suomi.fi/api/v11/Service/serviceClass?uri=http%3A%2F%2Furi.suomi.fi%2Fcodelist%2Fptv%2Fptvserclass2%2Fcode%2FP27.1&page=2')
 r_dict = r.json()
-print(r_dict)
-
-def get_write():
-    code =  "P27"
-    page = 1
-    r = requests.get('https://api.palvelutietovaranto.suomi.fi/api/v11/Service/serviceClass?uri=http%3A%2F%2Furi.suomi.fi%2Fcodelist%2Fptv%2Fptvserclass2%2Fcode%2FP27&page=1')
-    r_dict = r.json()
-    if r_dict['pageCount'] > 1:
-        while page <= r_dict['pageCount']:
-            page += 1
-            r = requests.get('https://api.palvelutietovaranto.suomi.fi/api/v11/Service/serviceClass?uri=http%3A%2F%2Furi.suomi.fi%2Fcodelist%2Fptv%2Fptvserclass2%2Fcode%2FP27&page={}'.format(page))
-            
 
 def clearFile():
     with open("data.txt", "w") as file:
@@ -37,9 +25,8 @@ def uniq():
                 final_file.write(line)
     print("Amount of unique results: "+str(test_set.__len__()))
 
-# test()
 # clearFile()
 # writeFile()
 uniq()
-# formatFile()
-counts()
+# counts()
+        
