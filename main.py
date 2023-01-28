@@ -43,25 +43,25 @@ def write_excel():
 
 
 def main():
-    code = "P27.1"
-    url = "https://api.palvelutietovaranto.suomi.fi/api/v11/Service/serviceClass?uri=http%3A%2F%2Furi.suomi.fi%2Fcodelist%2Fptv%2Fptvserclass2%2Fcode%2F{}".format(
-        code)
-    page = 1
-    while True:
-        params = {"page": page}
-        response = requests.get(url, params=params)
-        data = response.json()
+    clear_file()
+    codes = ["P27","P27.1"]
+    for code in codes:
+        url = "https://api.palvelutietovaranto.suomi.fi/api/v11/Service/serviceClass?uri=http%3A%2F%2Furi.suomi.fi%2Fcodelist%2Fptv%2Fptvserclass2%2Fcode%2F{}".format(
+            code)
+        page = 1
+        while True:
+            params = {"page": page}
+            response = requests.get(url, params=params)
+            data = response.json()
 
-        # Do something with the data here
-        write_file(data)
-        if len(data['itemList']) < 1000:
-            # If the number of lines is less than 1000, it means we have reached the last page
-            break
-        page += 1
+            # Do something with the data here
+            write_file(data)
+            if len(data['itemList']) < 1000:
+                # If the number of lines is less than 1000, it means we have reached the last page
+                break
+            page += 1
     counts()
     uniq()
     # write_excel()
 
-
-# clear_file()
 main()
