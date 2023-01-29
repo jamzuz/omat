@@ -11,16 +11,22 @@ def clear_file():
 def write_file(data):
     # Append lines in the file
     with open("data.txt", "a") as file:
-        for l in enumerate(data['itemList']):
-            file.write(l.__str__()[l.__str__().find("{"):-1]+"\n")
+        for count, line in enumerate(data['itemList']):
+            # exclude everything before "{" char from the line to write
+            try:
+                start_index = str(line).index("{")
+                substring = str(line)[start_index:]
+                file.write(substring+"\n")
+            except(ValueError):
+                print("error: "+ValueError)          
 
 
 def counts():
     # Count lines in file
     with open("data.txt", "r") as neat_file:
-        for count, line in enumerate(neat_file):
+        for count in enumerate(neat_file):
             pass
-        print("Amount of results: ", count + 1)
+        print("Amount of results: ", count[0] + 1)
 
 
 def uniq():
