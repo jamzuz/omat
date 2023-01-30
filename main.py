@@ -12,12 +12,13 @@ def write_file(data):
     # Append lines in the file
     with open("data.txt", "a") as file:
         for count, line in enumerate(data['itemList']):
-            # exclude everything before "{" char from the line to write
             try:
+                # exclude everything before "{" char from the line
                 start_index = str(line).index("{")
                 substring = str(line)[start_index:]
                 file.write(substring+"\n")
             except(ValueError):
+                # this shouldnt happen but its good to handle a possible error
                 print("error: "+ValueError)          
 
 
@@ -60,7 +61,6 @@ def main():
             response = requests.get(url, params=params)
             data = response.json()
 
-            # Do something with the data here
             write_file(data)
             if len(data['itemList']) < 1000:
                 # If the number of lines is less than 1000, it means we have reached the last page
