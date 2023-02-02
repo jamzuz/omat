@@ -1,0 +1,42 @@
+[
+    {
+      "id": "uid",
+      "serviceNames": [
+        {
+          "value": "string"
+        }
+      ],
+      "areas": [
+        {
+          "municipalities": [
+            {
+              "name": [
+                {
+                  "value": "string"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "serviceClasses": [
+        {
+          "name": [
+            {
+              "value": "string"
+            }
+          ],
+          "code": "P27.1"
+        }
+      ],
+      "serviceChannels": [
+        {
+          "serviceChannel": {
+            "id": "uid",
+            "name": "string"
+          }
+        }
+      ],
+      "modified": "2021-11-01T07:59:52.57761"
+    }
+  ]
