@@ -9,8 +9,9 @@ def clear_file():
 
 
 def write_file(data, file_name="data.txt"):
-    # Append lines in the file
+    # open .txt file in append mode
     with open(file_name, "a") as file:
+        # write itemlist IDs in the file
         for obj in data['itemList']:
             file.write(obj['id'] + "\n")
 
@@ -29,18 +30,11 @@ def uniq():
     with open("data.txt", "r") as file:
         for line in file:
             id_set.add(line)
+    # write unique IDs in another file
     with open("data_final.txt", "w") as final_file:
         for obj in id_set:
             final_file.write(obj)
     print("Amount of unique results: "+str(id_set.__len__()))
-
-
-def write_excel():
-    # Write contents of data.txt into excel file
-    with open("data.txt", "r") as data:
-        df = pandas.DataFrame(data)
-        df.to_excel('data.xlsx', index=False)
-
 
 def main():
     clear_file()
@@ -61,24 +55,29 @@ def main():
             page += 1
     counts()
     uniq()
-    # write_excel()
 
 
 def fetch_total():
+    # this function fetches first and last page of serviceChannels
+    # first page tells us the amount of total pages, amount of objects per page
     first_url = "https://api.palvelutietovaranto.suomi.fi/api/v11/ServiceChannel?isVisibleForAll=true&page=1&status=Published"
+    # note: "isVisibleForAll" parameter changes the results ALOT
     response = requests.get(first_url)
     response_dict = response.json()
+    # last page gives us x amount of objects so the formula is following:
     last_url = "https://api.palvelutietovaranto.suomi.fi/api/v11/ServiceChannel?isVisibleForAll=true&page={}&status=Published".format(
         response_dict['pageCount'])
     last_response = requests.get(last_url)
     last_dict = last_response.json()
     for count, obj in enumerate(last_dict['itemList']):
         pass
+    # amount of pages * pagesize + amount of objects on last page = total count of results
     print("Total number of objects in ServiceChannels: " +
           str(response_dict['pageCount'] * 1000 + count))
 
 
 def fetch_details():
+    # mainly using this for debugging
     uid = "e3658c00-02c9-4fd4-8062-f89c9e9dfeb3"
     url = "https://api.palvelutietovaranto.suomi.fi/api/v11/ServiceChannel/{}".format(
         uid)
