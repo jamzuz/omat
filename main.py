@@ -45,7 +45,7 @@ def write_excel():
 def main():
     clear_file()
     codes = ["P27", "P27.1"]
-    for code in codes:
+    for count, code in enumerate(codes):
         url = "https://api.palvelutietovaranto.suomi.fi/api/v11/Service/serviceClass?uri=http%3A%2F%2Furi.suomi.fi%2Fcodelist%2Fptv%2Fptvserclass2%2Fcode%2F{}".format(
             code)
         page = 1
@@ -54,7 +54,7 @@ def main():
             response = requests.get(url, params=params)
             data = response.json()
 
-            write_file(data)
+            write_file(data, str(codes[count-1])+".txt")
             if len(data['itemList']) < 1000 | response.status_code != 200:
                 # If the number of lines is less than 1000, it means we have reached the last page
                 break
@@ -65,10 +65,10 @@ def main():
 
 
 def fetch_total():
-    first_url = "https://api.palvelutietovaranto.suomi.fi/api/v11/ServiceChannel?isVisibleForAll=false&page=1&status=Published"
+    first_url = "https://api.palvelutietovaranto.suomi.fi/api/v11/ServiceChannel?isVisibleForAll=true&page=1&status=Published"
     response = requests.get(first_url)
     response_dict = response.json()
-    last_url = "https://api.palvelutietovaranto.suomi.fi/api/v11/ServiceChannel?isVisibleForAll=false&page={}&status=Published".format(
+    last_url = "https://api.palvelutietovaranto.suomi.fi/api/v11/ServiceChannel?isVisibleForAll=true&page={}&status=Published".format(
         response_dict['pageCount'])
     last_response = requests.get(last_url)
     last_dict = last_response.json()
