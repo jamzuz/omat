@@ -1,10 +1,8 @@
 import requests
-import pandas
 
-
-def clear_file():
+def clear_file(file_name):
     # Write a line in file overwriting it completely
-    with open("data.txt", "w") as file:
+    with open(file_name, "w") as file:
         file.write("")
 
 
@@ -16,12 +14,13 @@ def write_file(data, file_name="data.txt"):
             file.write(obj['id'] + "\n")
 
 
-def counts():
+def counts(filename: str):
     # Count lines in file
-    with open("data.txt", "r") as neat_file:
-        for count in enumerate(neat_file):
+    with open(filename, "r") as file:
+        for count in enumerate(file):
             pass
-        print("Amount of results: ", count[0] + 1)
+        print(str("Amount of results in {}: ").format(
+            filename) + " "+str(count[0] + 1))
 
 
 def uniq():
@@ -36,25 +35,27 @@ def uniq():
             final_file.write(obj)
     print("Amount of unique results: "+str(id_set.__len__()))
 
+
 def main():
-    clear_file()
-    codes = ["P27", "P27.1"]
+    codes = ["P27","P27.1"]
     for count, code in enumerate(codes):
-        url = "https://api.palvelutietovaranto.suomi.fi/api/v11/Service/serviceClass?uri=http%3A%2F%2Furi.suomi.fi%2Fcodelist%2Fptv%2Fptvserclass2%2Fcode%2F{}".format(
+        filename = str(codes[count]+".txt")
+        print(filename)
+        clear_file(filename)
+        url = "https://api.palvelutietovaranto.suomi.fi/api/v11/Service/serviceClass?uri=http://uri.suomi.fi/codelist/ptv/ptvserclass2/code/{}".format(
             code)
         page = 1
         while True:
             params = {"page": page}
             response = requests.get(url, params=params)
             data = response.json()
-
-            write_file(data, str(codes[count-1])+".txt")
+            write_file(data, filename)
             if len(data['itemList']) < 1000 | response.status_code != 200:
                 # If the number of lines is less than 1000, it means we have reached the last page
                 break
             page += 1
-    counts()
-    uniq()
+        counts(filename)
+    # uniq(filename)
 
 
 def fetch_total():
@@ -86,6 +87,7 @@ def fetch_details():
     with open("details.xlsx", "w") as file:
         for x in data:
             print(x)
+
 
 main()
 # fetch_details()

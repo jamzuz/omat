@@ -7,10 +7,8 @@ def process_frame_new(frame):
     # depending on clients needs we need to add certain things to the frame
     new_frame = dict()
     #  add service names to the new frame
-    service_names = []
-    for name in frame['serviceNames']:
-        if name["language"] == "fi":
-            service_names.append(name['value'])
+    service_names = [name['value']
+                     for name in frame['serviceNames'] if name['language'] == 'fi']
     new_frame.update({"serviceNames": service_names})
     # add munincipalities to the new frame
     muns = []
@@ -21,23 +19,26 @@ def process_frame_new(frame):
                     muns.append(x['value'])
     new_frame.update({"munincipalities": muns})
     #  add service descriptions to the new frame
-    service_desc = []
-    for desc in frame['serviceDescriptions']:
-        if desc['type'] == "Description" and desc['language'] == "fi":
-            service_desc.append(desc['value'])
+    service_desc = [desc['value'] for desc in frame['serviceDescriptions']
+                    if desc['type'] == 'Description' and desc['language'] == 'fi']
     new_frame.update({"serviceDescriptions": service_desc})
-    # add service classes to the new frame
-    # service_class = []
-    # for cl in frame['serviceClasses']:
-    #     for name in cl['name']:
-    #         if name['language'] == 'fi':
-    #             service_class.append(
-    #                 name['value'])
-    # new_frame.update({"serviceClass": service_class})
+    # add ontology terms to the new frame
+    ontology = []
+    for n in frame['ontologyTerms']:
+        for y in n['name']:
+            if y['language'] == 'fi':
+                ontology.append(y['value'])
+    new_frame.update({'ontologyTerms':ontology})
+    # add service_channels to the new frame
+    service_channels = []
+    for c in frame['serviceChannels']:
+        service_channels.append(c['serviceChannel']['name'])
+    new_frame.update({'serviceChannels':service_channels})
     # add id to the frame
     new_frame.update({"id": frame['id']})
     # add modified date to the new frame
     new_frame.update({"modified": frame['modified']})
+
     return new_frame
 
 
@@ -72,6 +73,7 @@ def package_and_send():
                     uids_list.append(line)
                     counter += 1
                     total += 1
+        print("querying last page results.. Total results: "+str(total))
         # query remaining data
         uids = ",".join(uids_list)
         url = "https://api.palvelutietovaranto.suomi.fi/api/v11/Service/list?guids={}".format(
